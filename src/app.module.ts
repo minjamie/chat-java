@@ -6,15 +6,19 @@ import { LoggerMiddleware } from './middleware/logger.middleware';
 import { UsersModule } from './users/users.module';
 import { ChannelsModule } from './channels/channels.module';
 import { DmsModule } from './dms/dms.module';
+import { WorkspacesService } from './workspaces/workspaces.service';
+import { WorkspacesController } from './workspaces/workspaces.controller';
+import { WorkspacesModule } from './workspaces/workspaces.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     UsersModule,
     ChannelsModule,
     DmsModule,
+    WorkspacesModule,
   ],
-  controllers: [AppController],
-  providers: [AppService, ConfigService],
+  controllers: [AppController, WorkspacesController],
+  providers: [AppService, ConfigService, WorkspacesService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): any {
