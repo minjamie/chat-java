@@ -52,8 +52,8 @@ import { AuthModule } from './auth/auth.module';
     }),
     TypeOrmModule.forFeature([Users]),
   ],
-  controllers: [AppController, WorkspacesController],
-  providers: [AppService, ConfigService, WorkspacesService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): any {

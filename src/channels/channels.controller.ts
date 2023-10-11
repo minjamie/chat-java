@@ -1,30 +1,49 @@
-import { ApiTags } from '@nestjs/swagger';
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Param, Query, ParseIntPipe } from '@nestjs/common';
+import { User } from 'src/common/decorator/user.decorator';
+import { Users } from 'src/entities/Users';
+import { ChannelsService } from './channels.service';
 @ApiTags('CHANNELS')
-@Controller('api/workspaces/:url/channels')
+@Controller('api/workspaces')
 export class ChannelsController {
-  @Get()
-  getAllChannels() {}
-
-  @Post()
-  createChannel() {}
-
-  @Get(':name')
-  getSpecificChannel(@Query() query) {
-    console.log(query.perPage, query.page);
+  constructor(private channelsService: ChannelsService) {}
+  @ApiParam({
+    name: 'url',
+    required: true,
+    description: '워크스페이스 url',
+  })
+  @ApiOperation({ summary: '워크스페이스 채널 모두 가져오기' })
+  @Get(':url/channels')
+  getWorkspaceChannels(@Param('url') url, @User() user: Users) {
+    return this.channelsService.getWorkspaceChannels(url, user.id);
   }
 
-  @Get(':name/chat')
-  getChats(@Query() query) {
-    console.log(query.perPage, query.page);
+  @ApiOperation({ summary: '워크스페이스 특정 채널 가져오기' })
+  @Get(':url/channels/:name')
+  async getWorkspaceChannel(@Param('url') url, @Param('name') name) {
+    return this.channelsService.getWorkspaceChannel(url, name);
   }
 
-  @Post(':name/chats')
-  postChat(@Body() body: any) {}
+  @Get(':url/channels/:name/members')
+  async getWorkspaceChannelMembers(
+    @Param('url') url: string,
+    @Param('name') name: string,
+  ) {
+    return this.channelsService.getWorkspaceChannelMembers(url, name);
+  }
 
-  @Get(':name/members')
-  getAllMembers() {}
-
-  @Post(':name/members')
-  inviteMembers() {}
+  @Get(':url/channels/:name/chats')
+  async getWorkspaceChannelChats(
+    @Param('url') url,
+    @Param('name') name,
+    @Query('perPage', ParseIntPipe) perPage: number,
+    @Query('page', ParseIntPipe) page: number,
+  ) {
+    return this.channelsService.getWorkspaceChannelChats(
+      url,
+      name,
+      perPage,
+      page,
+    );
+  }
 }

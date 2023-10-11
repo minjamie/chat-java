@@ -3,7 +3,6 @@ import {
   Controller,
   Get,
   Post,
-  Delete,
   Body,
   Param,
   ParseIntPipe,

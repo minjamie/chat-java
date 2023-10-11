@@ -81,7 +81,7 @@ export class WorkspacesService {
     this.usersRepository
       .createQueryBuilder('u')
       .innerJoin('u.WorkspaceMembers', 'ws')
-      .innerJoin('m.Workspace', 'w', 'w.url = :url', { url })
+      .innerJoin('ws.Workspace', 'w', 'w.url = :url', { url })
       .getMany();
   }
 
